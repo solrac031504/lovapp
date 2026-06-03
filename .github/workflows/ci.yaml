@@ -24,22 +24,17 @@ jobs:
         with:
           python-version: '3.12.x'
 
-      - name: Create virtual environment
-        run: |
-          python3 -m venv .venv
-          source .venv/bin/activate
-
       - name: Install dependencies
         run: |
-          pip install -r etl/requirements.txt
+          pip install -r requirements.txt
           pip install flake8 pyright
 
       - name: Lint with flake8
         run: |
-          flake8 etl/ \
+          flake8 \
             --max-line-length=120 \
             --ignore=E501
 
       - name: Type-check with pyright
         run: |
-          pyright etl/
+          pyright 
