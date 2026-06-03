@@ -10,8 +10,11 @@
         "editor.formatOnType": true,
         "editor.wordBasedSuggestions": "off",
         "editor.codeActionsOnSave": {
-            "source.organizeImports": "explicit"
+            "source.organizeImports": "explicit",
+            "source.addTypeAnnotation": "always",
+            "source.unusedImports": "always"
         }
     },
-    "python.analysis.typeCheckingMode": "strict"
+    "python.analysis.typeCheckingMode": "basic",
+    "python.analysis.useLibraryCodeForTypes": true
 }
