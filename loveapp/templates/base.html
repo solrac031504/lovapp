@@ -10,6 +10,8 @@
   <nav>
     {% if current_user.is_authenticated %}
       <span>Hi, {{ current_user.username }}</span>
+      <button type="button" disabled title="Coming soon">Calendar</button>
+      <button type="button" disabled title="Coming soon">Complaints</button>
       <a href="{{ url_for('auth.logout') }}">Log out</a>
     {% else %}
       <a href="{{ url_for('auth.login') }}">Log in</a>

@@ -3,7 +3,7 @@ import secrets
 
 import click
 from dotenv import load_dotenv
-from flask import Flask, Response
+from flask import Flask, Response, render_template
 from flask_login import login_required
 
 if __package__:
@@ -51,7 +51,7 @@ def create_app() -> Flask:
     @app.route("/")
     @login_required
     def home() -> str:
-        return "Hello world"
+        return render_template("home.html")
 
     @app.route("/favicon.ico")
     def favicon() -> Response:
