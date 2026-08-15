@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from flask import Flask
 
 if __package__:
-    from . import models  # noqa: F401
+    from . import models
     from .extensions import db, login_manager
 else:
     import models  # noqa: F401
@@ -35,8 +35,6 @@ def create_app() -> Flask:
     app.config["SECRET_KEY"] = secret_key
     app.config["SQLALCHEMY_DATABASE_URI"] = sqlalchemy_database_uri
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-
-    print(app.config["SQLALCHEMY_DATABASE_URI"])
 
     db.init_app(app)
     login_manager.init_app(app)
