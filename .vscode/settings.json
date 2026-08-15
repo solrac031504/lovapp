@@ -1,0 +1,20 @@
+{
+    "editor.formatOnSave": true,
+    "[github-actions-workflow]": {
+        "editor.defaultFormatter": "github.vscode-github-actions",
+        "editor.tabSize": 2,
+        "editor.insertSpaces": true
+    },
+    "[python]": {
+        "diffEditor.ignoreTrimWhitespace": false,
+        "editor.formatOnType": true,
+        "editor.wordBasedSuggestions": "off",
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": "explicit",
+            "source.addTypeAnnotation": "always",
+            "source.unusedImports": "always"
+        }
+    },
+    "python.analysis.typeCheckingMode": "basic",
+    "python.analysis.useLibraryCodeForTypes": true
+}
