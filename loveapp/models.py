@@ -22,6 +22,11 @@ class User(UserMixin, db.Model):
     send_email = db.Column(db.Boolean, default=True, nullable=False)
     send_message = db.Column(db.Boolean, default=True, nullable=False)
 
+    def __init__(self, username: str, email: str, phone: str) -> None:
+        self.username: str = username
+        self.email: str = email
+        self.phone: str = phone
+
     def set_password(self, password: str) -> None:
         """Hash and store a password. Use this when manually creating users."""
         self.password_hash: str = generate_password_hash(password)
