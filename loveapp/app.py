@@ -1,15 +1,21 @@
 import os
 import secrets
 
+import click
 from dotenv import load_dotenv
 from flask import Flask
+from flask_login import login_required
 
 if __package__:
     from . import models
+    from .blueprints.auth import auth as auth_blueprint
     from .extensions import db, login_manager
+    from .models import User
 else:
     import models  # noqa: F401
+    from blueprints.auth import auth as auth_blueprint
     from extensions import db, login_manager
+    from models import User
 
 
 def create_app() -> Flask:
@@ -40,13 +46,45 @@ def create_app() -> Flask:
     login_manager.init_app(app)
 
     # Register blueprints
-    # TODO: Register blueprints
+    app.register_blueprint(auth_blueprint)
+
+    @app.route("/")
+    @login_required
+    def home() -> str:
+        return "Hello world"
 
     # Create all tables on first run
     with app.app_context():
         db.create_all()
 
+    register_cli(app)
+
     return app
+
+
+def register_cli(app: Flask) -> None:
+    """CLI commands for managing users, since there is no self-service
+    registration flow -- users are inserted manually into the User table."""
+
+    @app.cli.command("create-user")
+    @click.argument("username")
+    @click.argument("email")
+    @click.argument("phone")
+    @click.password_option()
+    def create_user(username: str, email: str, phone: str, password: str) -> None:
+        """Create a new user. Example:
+
+        flask create-user carlos carlos@example.com 555-0100
+        """
+        if User.query.filter_by(username=username).first():
+            click.echo(f"Error: username '{username}' already exists.")
+            return
+
+        user = User(username=username, email=email, phone=phone)
+        user.set_password(password)
+        db.session.add(user)
+        db.session.commit()
+        click.echo(f"Created user '{username}' (id={user.id}).")
 
 
 if __name__ == "__main__":

@@ -1,6 +1,7 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 from flask_login import UserMixin
+from werkzeug.security import check_password_hash, generate_password_hash
 
 if __package__:
     from .extensions import db
@@ -21,6 +22,16 @@ class User(UserMixin, db.Model):
     send_email = db.Column(db.Boolean, default=True, nullable=False)
     send_message = db.Column(db.Boolean, default=True, nullable=False)
 
+    def set_password(self, password: str) -> None:
+        """Hash and store a password. Use this when manually creating users."""
+        self.password_hash: str = generate_password_hash(password)
+
+    def check_password(self, password: str) -> bool:
+        """Verify a plaintext password against the stored hash."""
+        if not self.password_hash:
+            return False
+        return check_password_hash(self.password_hash, password)
+
 
 class CalendarEventType(db.Model):
     """Represents a calendar event type"""
@@ -40,7 +51,7 @@ class CalendarEvent(db.Model):
     start_time = db.Column(db.DateTime, nullable=False)
     end_time = db.Column(db.DateTime)
     created_by = db.Column(db.Integer, db.ForeignKey("user.id"))
-    created_at = db.Column(db.DateTime, default=datetime.now())
+    created_at = db.Column(db.DateTime, default=datetime.now(timezone.utc))
 
 
 class EmailNotification(db.Model):
@@ -50,7 +61,7 @@ class EmailNotification(db.Model):
     recipient_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     subject = db.Column(db.String(100), nullable=False)
     message = db.Column(db.Text, nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.now())
+    created_at = db.Column(db.DateTime, default=datetime.now(timezone.utc))
     notif_type = db.Column(db.String(50))  # 'event', 'complaint', 'system'
 
 
@@ -60,7 +71,7 @@ class TextNotification(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     recipient_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     message = db.Column(db.Text, nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.now())
+    created_at = db.Column(db.DateTime, default=datetime.now(timezone.utc))
     notif_type = db.Column(db.String(50))  # 'event', 'complaint', 'system'
 
 
@@ -74,4 +85,4 @@ class Complaint(db.Model):
     mood = db.Column(db.String(50))  # 'frustrated', 'sad', 'upset'
     status = db.Column(db.String(50), default="open")  # open, acknowledged, resolved
     severity_level = db.Column(db.Integer)  # 1-10
-    created_at = db.Column(db.DateTime, default=datetime.now())
+    created_at = db.Column(db.DateTime, default=datetime.now(timezone.utc))
