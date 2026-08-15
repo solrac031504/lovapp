@@ -41,6 +41,10 @@ def create_app() -> Flask:
 
     # Register blueprints
 
+    @app.route("/")
+    def home() -> str:
+        return "Hello world"
+
     # Create all tables on first run
     with app.app_context():
         db.create_all()
