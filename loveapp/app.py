@@ -40,10 +40,7 @@ def create_app() -> Flask:
     login_manager.init_app(app)
 
     # Register blueprints
-
-    @app.route("/")
-    def home() -> str:
-        return "Hello world"
+    # TODO: Register blueprints
 
     # Create all tables on first run
     with app.app_context():
