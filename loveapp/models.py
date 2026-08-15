@@ -5,7 +5,7 @@ from flask_login import UserMixin
 
 
 class User(UserMixin, db.Model):
-    """Represents"""
+    """Represents a single user login"""
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
@@ -19,11 +19,15 @@ class User(UserMixin, db.Model):
 
 
 class CalendarEventType(db.Model):
+    """Represents a calendar event type"""
+
     id = db.Column(db.Integer, primary_key=True)
     event_type = db.Column(db.String(100))
 
 
 class CalendarEvent(db.Model):
+    """Represents a calendar event"""
+
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(200), nullable=False)
     description = db.Column(db.Text)
@@ -36,6 +40,8 @@ class CalendarEvent(db.Model):
 
 
 class EmailNotification(db.Model):
+    """Tracks notifications sent via email"""
+
     id = db.Column(db.Integer, primary_key=True)
     recipient_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     subject = db.Column(db.String(100), nullable=False)
@@ -45,6 +51,8 @@ class EmailNotification(db.Model):
 
 
 class TextNotification(db.Model):
+    """Tracks notifications sent via text"""
+
     id = db.Column(db.Integer, primary_key=True)
     recipient_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     message = db.Column(db.Text, nullable=False)
@@ -53,6 +61,8 @@ class TextNotification(db.Model):
 
 
 class Complaint(db.Model):
+    """Represents a compliant filed from a user"""
+
     id = db.Column(db.Integer, primary_key=True)
     submitter_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     title = db.Column(db.String(200), nullable=False)
