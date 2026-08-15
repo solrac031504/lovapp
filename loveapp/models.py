@@ -1,7 +1,11 @@
 from datetime import datetime
 
-from extensions import db
 from flask_login import UserMixin
+
+if __package__:
+    from .extensions import db
+else:
+    from extensions import db
 
 
 class User(UserMixin, db.Model):
