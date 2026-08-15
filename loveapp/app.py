@@ -3,7 +3,7 @@ import secrets
 
 import click
 from dotenv import load_dotenv
-from flask import Flask
+from flask import Flask, Response
 from flask_login import login_required
 
 if __package__:
@@ -52,6 +52,10 @@ def create_app() -> Flask:
     @login_required
     def home() -> str:
         return "Hello world"
+
+    @app.route("/favicon.ico")
+    def favicon() -> Response:
+        return app.send_static_file("favicon.ico")
 
     # Create all tables on first run
     with app.app_context():

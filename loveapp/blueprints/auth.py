@@ -2,6 +2,8 @@ from datetime import datetime, timezone
 
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required, login_user, logout_user
+from werkzeug import Response
+from werkzeug.wrappers.response import Response
 
 try:
     from ..extensions import db
@@ -16,7 +18,7 @@ auth = Blueprint("auth", __name__, template_folder="../templates/auth")
 
 
 @auth.route("/login", methods=["GET", "POST"])
-def login():
+def login() -> Response | str:
     if current_user.is_authenticated:
         return redirect(url_for("home"))
 
@@ -25,6 +27,7 @@ def login():
         user = User.query.filter_by(username=form.username.data).first()
 
         if user is None or not user.check_password(form.password.data):
+            print("Invalid username or password")
             flash("Invalid username or password", "danger")
             return redirect(url_for("auth.login"))
 
@@ -34,18 +37,19 @@ def login():
         user.last_login_utc = datetime.now(timezone.utc)
         db.session.commit()
 
-        next_page = request.args.get("next")
+        next_page: str | None = request.args.get("next")
         # Guard against open redirects: only allow relative paths.
         if not next_page or not next_page.startswith("/"):
-            next_page = url_for("home")
-        return redirect(next_page)
+            return redirect(url_for("home"))
+        else:
+            return redirect(next_page)
 
     return render_template("auth/login.html", form=form)
 
 
 @auth.route("/logout")
 @login_required
-def logout():
+def logout() -> Response:
     logout_user()
     flash("You have been logged out", "info")
     return redirect(url_for("auth.login"))
