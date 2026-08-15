@@ -1,4 +1,5 @@
 import os
+import secrets
 
 from dotenv import load_dotenv
 from extensions import db, login_manager
@@ -12,7 +13,7 @@ def create_app() -> Flask:
     load_dotenv()
 
     # Grab values
-    secret_key: str | None = os.getenv("SECRET_KEY")
+    secret_key: str = secrets.token_hex()
     sqlalchemy_database_uri: str | None = os.getenv("SQLALCHEMY_DATABASE_URI")
 
     # Ensure values are present
